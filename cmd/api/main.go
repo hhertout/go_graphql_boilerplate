@@ -35,7 +35,7 @@ func main() {
 
 	if os.Getenv("GO_ENV") == "development" {
 		logger.Sugar().Infof("🐹 Connect to http://localhost:%v/ for GraphQL playground", port)
-		logger.Sugar().Infof("🐹 API available on http://localhost:%v%s for GraphQL playground", port, BASE_URL)
+		logger.Sugar().Infof("🐹 API available on http://localhost:%v%s", port, BASE_URL)
 		logger.Sugar().Info("⚠️ Caution : The server will be running under development mode 🔨🔨")
 	}
 
