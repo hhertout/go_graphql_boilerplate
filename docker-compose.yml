@@ -10,5 +10,6 @@ services:
       - ./graph:/app/graph
       - ./protobuf:/app/protobuf
       - ./pkg:/app/pkg
+      - ./lib:/app/lib
     env_file:
         - .env
