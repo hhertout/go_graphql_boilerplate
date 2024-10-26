@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hhertout/twirp_auth/lib/loop"
+	"github.com/hhertout/graphql_api_boilerplate/lib/loop"
 )
 
 func TestMap_IntToString(t *testing.T) {

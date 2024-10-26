@@ -3,7 +3,7 @@ package loop_test
 import (
 	"testing"
 
-	"github.com/hhertout/twirp_auth/lib/loop"
+	"github.com/hhertout/graphql_api_boilerplate/lib/loop"
 )
 
 func TestFilter_Ints(t *testing.T) {

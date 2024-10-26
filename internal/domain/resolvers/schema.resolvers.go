@@ -9,7 +9,7 @@ import (
 	"fmt"
 
 	"github.com/hhertout/graphql_api_boilerplate/graph"
-	"github.com/hhertout/graphql_api_boilerplate/internal/model"
+	"github.com/hhertout/graphql_api_boilerplate/internal/domain/model"
 )
 
 // CreateTodo is the resolver for the createTodo field.
