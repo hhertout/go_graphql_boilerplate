@@ -11,6 +11,7 @@ func ApiKeyMiddleware(next http.Handler) http.Handler {
 		if os.Getenv("API_KEY") == "" {
 			w.WriteHeader(http.StatusInternalServerError)
 			log.Fatal("API_KEY is not set")
+			return
 		}
 
 		apiKey := r.Header.Get("X-API-KEY")

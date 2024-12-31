@@ -8,8 +8,8 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/hhertout/graphql_api_boilerplate/graph"
-	"github.com/hhertout/graphql_api_boilerplate/internal/domain/middleware"
-	"github.com/hhertout/graphql_api_boilerplate/internal/domain/resolvers"
+	"github.com/hhertout/graphql_api_boilerplate/internal/application/middleware"
+	"github.com/hhertout/graphql_api_boilerplate/internal/application/resolvers"
 	"go.uber.org/zap"
 )
 
