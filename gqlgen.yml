@@ -17,8 +17,8 @@ exec:
 
 # Where should any generated models go?
 model:
-  filename: internal/application/model/models_gen.go
-  package: model
+  filename: internal/application/dtos/dtos_gen.go
+  package: dtos
 
 # Where should the resolver implementations go?
 resolver:

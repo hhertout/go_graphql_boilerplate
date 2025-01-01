@@ -9,16 +9,16 @@ import (
 	"fmt"
 
 	"github.com/hhertout/graphql_api_boilerplate/graph"
-	"github.com/hhertout/graphql_api_boilerplate/internal/application/model"
+	"github.com/hhertout/graphql_api_boilerplate/internal/application/dtos"
 )
 
 // CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
+func (r *mutationResolver) CreateTodo(ctx context.Context, input dtos.NewTodo) (*dtos.Todo, error) {
 	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
 }
 
 // Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
+func (r *queryResolver) Todos(ctx context.Context) ([]*dtos.Todo, error) {
 	panic(fmt.Errorf("not implemented: Todos - todos"))
 }
 
