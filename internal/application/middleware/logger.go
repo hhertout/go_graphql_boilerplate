@@ -1,57 +1,39 @@
 package middleware
 
 import (
-	"net/http"
+	"context"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql"
 	"go.uber.org/zap"
 )
 
-type ResponseWriterWrapper struct {
-	http.ResponseWriter
-	StatusCode int
-	Size       int
+func AddLoggerToContext(logger *zap.Logger) graphql.OperationMiddleware {
+	return func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
+		ctx = context.WithValue(ctx, CtxLoggerKey("logger"), logger)
+		return next(ctx)
+	}
 }
 
-func NewResponseWriterWrapper(w http.ResponseWriter) *ResponseWriterWrapper {
-	return &ResponseWriterWrapper{w, http.StatusOK, 0}
-}
+// AddOperationToContext adds operation details to the context.
+func Logger(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
+	l := ctx.Value(CtxLoggerKey("logger")).(*zap.Logger)
 
-// WriteHeader permet de capturer le statut de la réponse
-func (rw *ResponseWriterWrapper) WriteHeader(statusCode int) {
-	rw.StatusCode = statusCode
-	rw.ResponseWriter.WriteHeader(statusCode)
-}
+	start := time.Now()
 
-// Write permet de capturer la taille de la réponse
-func (rw *ResponseWriterWrapper) Write(b []byte) (int, error) {
-	size, err := rw.ResponseWriter.Write(b)
-	rw.Size += size
-	return size, err
-}
+	response := next(ctx)
 
-func Logger(next http.Handler, l *zap.Logger) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		start := time.Now()
+	responseCtx := graphql.GetOperationContext(ctx)
 
-		wrappedWriter := NewResponseWriterWrapper(w)
-
-		next.ServeHTTP(wrappedWriter, r)
-
-		if r.URL.Path == "/health" {
-			return
-		}
-
+	if l != nil {
 		l.Info(
 			"request",
-			zap.String("method", r.Method),
-			zap.String("path", r.URL.Path),
-			zap.String("params", r.URL.RawQuery),
-			zap.String("content_type", r.Header.Get("Content-Type")),
-			zap.String("user_agent", r.Header.Get("User-Agent")),
-			zap.Int("status_code", wrappedWriter.StatusCode),
-			zap.Int("response_size", wrappedWriter.Size),
+			zap.String("content_type", responseCtx.Headers.Get("Content-Type")),
+			zap.String("user_agent", responseCtx.Headers.Get("User-Agent")),
+			zap.String("operation_name", responseCtx.Operation.Name),
 			zap.Duration("duration", time.Since(start)),
 		)
-	})
+	}
+
+	return response
 }

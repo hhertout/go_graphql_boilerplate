@@ -6,6 +6,8 @@ import (
 	"os"
 
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/extension"
+	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/hhertout/graphql_api_boilerplate/graph"
 	"github.com/hhertout/graphql_api_boilerplate/internal/application/middleware"
@@ -13,11 +15,12 @@ import (
 	"go.uber.org/zap"
 )
 
-const defaultPort = "8080"
+const defaultPort = "4000"
 const BASE_URL = "/api"
 
 func main() {
 	logger, _ := zap.NewProduction()
+
 	if os.Getenv("GO_ENV") == "development" {
 		logger, _ = zap.NewDevelopment()
 	}
@@ -28,10 +31,15 @@ func main() {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &resolvers.Resolver{}}))
+	srv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: &resolvers.Resolver{}}))
+	srv.AddTransport(transport.POST{})
+	srv.Use(extension.Introspection{})
+
+	srv.AroundOperations(middleware.AddLoggerToContext(logger))
+	srv.AroundOperations(middleware.Logger)
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/api"))
-	http.Handle(BASE_URL, middleware.Logger(srv, logger))
+	http.Handle(BASE_URL, srv)
 
 	if os.Getenv("GO_ENV") == "development" {
 		logger.Sugar().Infof("🐹 Connect to http://localhost:%v/ for GraphQL playground", port)

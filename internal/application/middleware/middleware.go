@@ -6,6 +6,7 @@ import (
 )
 
 type ContextKey string
+type CtxLoggerKey string
 
 func ChainMiddleware(handler http.Handler, middlewares ...func(next http.Handler) http.Handler) http.Handler {
 	if len(middlewares) < 1 {
