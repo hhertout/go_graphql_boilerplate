@@ -21,7 +21,7 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input dtos.NewTodo) (
 }
 
 // Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*dtos.Todo, error) {
+func (r *queryResolver) Todos(ctx context.Context, id *string) ([]*dtos.Todo, error) {
 	todo := dtos.Todo{
 		ID:   "1",
 		Text: "Hello world",

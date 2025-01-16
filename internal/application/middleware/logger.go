@@ -30,6 +30,7 @@ func Logger(ctx context.Context, next graphql.OperationHandler) graphql.Response
 			"request",
 			zap.String("content_type", responseCtx.Headers.Get("Content-Type")),
 			zap.String("user_agent", responseCtx.Headers.Get("User-Agent")),
+			zap.String("operation_type", string(responseCtx.Operation.Operation)),
 			zap.String("operation_name", responseCtx.Operation.Name),
 			zap.Duration("duration", time.Since(start)),
 		)
